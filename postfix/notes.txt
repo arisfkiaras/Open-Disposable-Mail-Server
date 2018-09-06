@@ -1,0 +1,16 @@
+docker build .
+docker run -it -p 25:25 IMAGE_ID /bin/bash
+$ service postfix restart
+# emails will appear under /var/mail
+
+Test with telnet:
+'''
+MAIL FROM:<test@example.com>
+RCPT TO:sss@asd.com
+DATA
+SUBJECT: test
+
+Test email content
+
+.
+'''
