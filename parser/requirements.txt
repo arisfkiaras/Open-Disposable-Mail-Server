@@ -1,0 +1,4 @@
+certifi==2018.8.24
+elasticsearch==6.3.1
+simplejson==3.16.0
+urllib3==1.23

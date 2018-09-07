@@ -1,0 +1,2 @@
+# Split the /var/mail/username to a different files, one for each email
+cat 2014-09 | formail -k -X From: -X Subject: -ds sh -c 'cat > ./m2sg.$FILENO.mail'
