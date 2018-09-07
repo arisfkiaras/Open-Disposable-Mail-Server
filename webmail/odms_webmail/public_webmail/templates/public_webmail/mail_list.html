@@ -1,0 +1,11 @@
+{% if emails %}
+    <ul>
+    {% for email in emails %}
+        {% for item in email.items %}
+            <li>{{ item }}</li>
+        {% endfor %}
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>s.</p>
+{% endif %}

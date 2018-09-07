@@ -6,6 +6,7 @@ from django.template import loader
 from django.shortcuts import redirect
 
 from .models import Domain
+from .elastic import Elastic
 
 def index(request):
     domains_list = Domain.objects.order_by('hostname')[:5]
@@ -19,7 +20,29 @@ def index(request):
 
     
 def mails(request, email_domain, email_address):
-    return HttpResponse("You want %s@%s." % (email_address, email_domain))
+    elastic = Elastic()
+    documents = elastic.getDocuments()
+    items = documents.items()
+    items2 = {}
+    for key, value in items:
+        items2[key] = value
+
+    items2 = items2["hits"]["hits"]
+
+    items3 = []
+    for hit in items2:
+        items3.append(hit["_source"])
+
+    
+    emails = items3
+    context = {
+        'emails': emails,
+    }
+    template = loader.get_template('public_webmail/mail_list.html')
+
+    return HttpResponse(template.render(context, request))
+
+    #return HttpResponse("You want %s@%s.<br><br>%s" % (email_address, email_domain, items2))
 
 def mails_no_address(request, email_domain):
     # TODO: Check that domain is valid

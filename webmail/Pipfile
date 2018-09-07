@@ -5,6 +5,9 @@ name = "pypi"
 
 [packages]
 django = "*"
+elasticsearch = "*"
+simplejson = "*"
+certifi = "*"
 
 [dev-packages]
 
