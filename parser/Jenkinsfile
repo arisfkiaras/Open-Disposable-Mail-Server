@@ -7,7 +7,7 @@ pipeline {
             }
             steps {
                 script {
-                    app = docker.build("frouk/email_parser")
+                    app = docker.build("frouk/email_parser", "-f parser/Dockerfile .")
                 }
             }
         }
