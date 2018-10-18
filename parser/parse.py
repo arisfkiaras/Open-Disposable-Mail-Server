@@ -25,10 +25,12 @@ def sanitize_string(text):
 def parse_mail(fromAddress, subject, content):
     fromAddress = sanitize_string(fromAddress.lower())
     subject = sanitize_string(subject)
-
+    print(fromAddress)
+    print(subject)
+    print(content)
     if fromAddress[:7] != "from\: ":
         #throw exception
-        print ("throw exception fromAddress")
+        # print ("throw exception fromAddress")
         return
     else:
         fromAddress = fromAddress[7:].replace('\r', '').replace('\n', '')
@@ -37,9 +39,8 @@ def parse_mail(fromAddress, subject, content):
         fromAddress = fromAddress[:500]
    
     if subject[:10].lower() != "subject\: ":
-        #throw exception
         print ("throw exception subject")
-        return
+        #return
     else:
         subject = subject[10:].replace('\r', '').replace('\n', '')
 
@@ -56,7 +57,7 @@ def parse_mail(fromAddress, subject, content):
     data["from"] = fromAddress
     data["subject"] = subject
     data["content"] = content
-
+    # print(data)
     el = Elastic()
     el.postData(body=data)
 
@@ -70,6 +71,7 @@ def main():
                     fromLine = openfile.readline()
                     subject = openfile.readline()
                     content = openfile.read()
+                    # print ("{}. {}. {}. {}".format(filee, fromLine, subject, content))
                     parse_mail(fromLine, subject, content)
             except Exception as error:
                 print('Caught this error: ' + repr(error))
