@@ -6,9 +6,9 @@ pipeline {
                 branch 'master'
             }
             steps {
-                dir(parser){
-                  script {
-                    app = docker.build("frouk/email_parser", "-f parser/Dockerfile .")
+                script {
+                    dir('parser'){
+                        app = docker.build("frouk/email_parser", "-f parser/Dockerfile .")
                     }
                 }
             }
