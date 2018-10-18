@@ -6,8 +6,10 @@ pipeline {
                 branch 'master'
             }
             steps {
-                script {
-                    sh "sshpass -p '$USERPASS' -v scp -o StrictHostKeyChecking=no database/es/docker-compose.yml $USERNAME@$qa_ip:~/docker-compose.yml"
+                withCredentials([usernamePassword(credentialsId: 'qa_server_credentials', usernameVariable: 'USERNAME', passwordVariable: 'USERPASS')]) {
+                    script {
+                        sh "sshpass -p '$USERPASS' -v scp -o StrictHostKeyChecking=no database/es/docker-compose.yml $USERNAME@$qa_ip:~/docker-compose.yml"
+                    }
                 }
             }
         }
