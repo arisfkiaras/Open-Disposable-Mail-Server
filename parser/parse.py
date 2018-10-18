@@ -6,6 +6,7 @@ from elastic import Elastic
 
 # https://gist.github.com/eranhirs/5c9ef5de8b8731948e6ed14486058842
 def sanitize_string(text):
+    
     # Escape special characters
     # http://lucene.apache.org/core/old_versioned_docs/versions/2_9_1/queryparsersyntax.html#Escaping Special Characters
     text = re.sub('([{}])'.format(re.escape('\\+\-&|!(){}\[\]^~*?:\/')), r"\\\1", text)
@@ -63,7 +64,7 @@ def parse_mail(fromAddress, subject, content):
 def main():    
     while True:
         time.sleep(2)
-        for filee in glob.glob("./temp/*.mail"):
+        for filee in glob.glob("/data/emails/*.mail"):
             try:
                 with open(filee, 'r') as openfile:
                     fromLine = openfile.readline()

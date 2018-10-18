@@ -1,10 +1,15 @@
-FROM python:3
+FROM ubuntu:bionic
+
+RUN apt update -y
+RUN apt upgrade -y
+
+RUN apt install mailutils -y
+RUN apt install python3-pip -y --fix-missing
+
+RUN mkdir -p /data/emails
 
 WORKDIR /usr/src/app
-
-COPY requirements.txt ./
-RUN pip install --no-cache-dir -r requirements.txt
-
 COPY . .
+RUN pip3 install --no-cache-dir -r requirements.txt
 
-CMD [ "python", "./parse.py" ]
+CMD ["/bin/bash", "deamon.sh"]
