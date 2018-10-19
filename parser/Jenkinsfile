@@ -40,7 +40,7 @@ pipeline {
                         } catch (err) {
                             echo: 'caught error: $err'
                         }
-                        sh "sshpass -p '$USERPASS' -v ssh -o StrictHostKeyChecking=no $USERNAME@$qa_ip \"docker run --restart always --network esnet -e \"ES_SERVER_ENDPOINT=elasticsearch\" --name email_parser -v /var/mail:/var/mail -td frouk/email_parser:${env.BUILD_NUMBER}\""
+                        sh "sshpass -p '$USERPASS' -v ssh -o StrictHostKeyChecking=no $USERNAME@$qa_ip \"docker run --restart always --network jenkins_docker_qa_esnet -e \"ES_SERVER_ENDPOINT=elasticsearch\" --name email_parser -v /var/mail:/var/mail -td frouk/email_parser:${env.BUILD_NUMBER}\""
                     }
                 }
             }
