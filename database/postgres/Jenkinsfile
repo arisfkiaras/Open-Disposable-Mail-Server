@@ -1,0 +1,38 @@
+pipeline {
+    agent any
+    stages {
+        stage('Push compose file to server') {
+            when {
+                branch 'master'
+            }
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'qa_server_credentials', usernameVariable: 'USERNAME', passwordVariable: 'USERPASS')]) {
+                    script {
+                        sh "sshpass -p '$USERPASS' -v scp -o StrictHostKeyChecking=no database/postgres/docker-compose.yml $USERNAME@$qa_ip:~/docker-compose.yml"
+                    }
+                }
+            }
+        }
+        stage('DeployToQA') {
+            when {
+                branch 'master'
+            }
+            steps {
+                withCredentials([
+                    usernamePassword(credentialsId: 'postgres_db_credentials', usernameVariable: 'POSTGRES_DB_USERNAME', passwordVariable: 'POSTGRES_DB_PASSWORD'),
+                    usernamePassword(credentialsId: 'qa_server_credentials', usernameVariable: 'USERNAME', passwordVariable: 'USERPASS')
+                ]){
+                    script {
+                        try {
+                            sh "sshpass -p '$USERPASS' -v ssh -o StrictHostKeyChecking=no $USERNAME@$qa_ip \"docker-compose down\""
+                            sh "sshpass -p '$USERPASS' -v ssh -o StrictHostKeyChecking=no $USERNAME@$qa_ip \"docker-compose rm -f\""
+                            sh "sshpass -p '$USERPASS' -v ssh -o StrictHostKeyChecking=no $USERNAME@$qa_ip \"POSTGRES_DB_PASSWORD=$POSTGRES_DB_PASSWORD docker-compose up -d\""
+                        } catch (err) {
+                            echo: 'caught error: $err'
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

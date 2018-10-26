@@ -1,0 +1,28 @@
+version: '2.2'
+services:
+  postgres_db:
+    image: postgres
+    container_name: postgres_container
+    environment:
+      - POSTGRES_PASSWORD=${POSTGRES_DB_PASSWORD}
+    volumes:
+      - postgres_db_data:/var/lib/postgresql/data
+    ports:
+      - 8880:5432
+    networks:
+      - postgresnet
+
+  adminer:
+    image: adminer
+    # restart: always
+    ports:
+      - 8881:8080
+    networks:
+      - postgresnet
+  
+volumes:
+  postgres_db_data:
+    driver: local
+
+networks:
+  postgresnet:
