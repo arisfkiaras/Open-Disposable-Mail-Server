@@ -109,7 +109,8 @@ def main():
                     content = openfile.read()
 
                     # Add to postgres
-
+                    parse_mail_postgres(fromLine, subject, content)
+                    
                     # Add to elastic
                     parse_mail_el(fromLine, subject, content)
             except Exception as error:
