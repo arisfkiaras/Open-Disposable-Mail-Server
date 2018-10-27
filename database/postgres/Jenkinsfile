@@ -24,7 +24,11 @@ pipeline {
                 ]){
                     script {
                         try {
-                            sh "sshpass -p '$USERPASS' -v ssh -o StrictHostKeyChecking=no $USERNAME@$qa_ip \"docker-compose down\""
+                            sh "sshpass -p '$USERPASS' -v ssh -o StrictHostKeyChecking=no $USERNAME@$qa_ip \"docker-compose down\""                        
+                        } catch (err) {
+                            echo: 'Guess, network is in use: $err'
+                        }
+                        try {
                             sh "sshpass -p '$USERPASS' -v ssh -o StrictHostKeyChecking=no $USERNAME@$qa_ip \"docker-compose rm -f\""
                             sh "sshpass -p '$USERPASS' -v ssh -o StrictHostKeyChecking=no $USERNAME@$qa_ip \"POSTGRES_DB_PASSWORD=$POSTGRES_DB_PASSWORD docker-compose up -d\""
                         } catch (err) {
