@@ -144,7 +144,7 @@ def parse_mail(filee):
             content = content + subject_line
             data['subject'] = ''
         else:
-            data['subject'] = subject_line[10:].replace('\r', '').replace('\n', '')
+            data['subject'] = subject_line[9:].replace('\r', '').replace('\n', '')
     
         content = content + openfile.read()
         data['content'] = content
