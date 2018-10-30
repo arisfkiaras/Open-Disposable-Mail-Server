@@ -150,7 +150,7 @@ def main():
         for filee in glob.glob("/data/emails/*.mail"):
             try:
                 data = parse_mail(filee)
-
+                insert_to_postgres(data)
             except Exception as error:
                 print('Caught this error: ' + repr(error))
             os.remove(filee)
