@@ -103,7 +103,7 @@ def insert_to_postgres(data):
     postgres.insert_email(
         data['from'], 
         '',
-        data['to_user']
+        data['to_user'],
         data['to_domain'], 
         data['to_domain'],
         data['subject'],
