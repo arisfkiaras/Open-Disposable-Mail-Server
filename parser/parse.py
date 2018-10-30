@@ -98,21 +98,60 @@ def parse_mail_postgres(fromAddress, subject, content):
     postgres = Postgres()
     postgres.insert_email(user_domain[0], user_domain[1], subject, content)
 
+def insert_to_postgres(data):
+    postgres = Postgres()
+    postgres.insert_email(
+        data['from'], 
+        '',
+        data['to_user']
+        data['to_domain'], 
+        data['to_domain'],
+        data['subject'],
+        data['content']
+    )
+
+def parse_mail(filee):
+    data = {}
+
+    with open(filee, 'r') as openfile:
+
+        to_line = openfile.readline().lower()
+        if to_line[:16] != "X-Original-To\: ":
+            return
+        to_address = to_line[16:].replace('\r', '').replace('\n', '')
+        to_address = to_address.split('@')
+        if len(to_address) != 2:
+            return
+        data['to_user'] = to_address[0]
+        data['to_domain'] = to_address[1]
+        
+        # NAME <user@domain.com>
+        from_line = openfile.readline().lower()
+        if from_line[:7] != "from\: ":
+            return
+        data['from'] = from_line[7:].replace('\r', '').replace('\n', '')
+        
+        content = ""
+
+        subject_line = openfile.readline()
+        if subject_line[:10].lower() != "subject\: ":
+            content = content + subject_line
+            data['subject'] = ''
+        else:
+            data['subject'] = subject_line[10:].replace('\r', '').replace('\n', '')
+    
+        content = content + openfile.read()
+        data['content'] = content
+
+        return data
+
 def main():    
     while True:
         time.sleep(2)
         for filee in glob.glob("/data/emails/*.mail"):
             try:
-                with open(filee, 'r') as openfile:
-                    fromLine = openfile.readline()
-                    subject = openfile.readline()
-                    content = openfile.read()
+                data = parse_mail(filee)
 
-                    # Add to postgres
-                    parse_mail_postgres(fromLine, subject, content)
-                    
-                    # Add to elastic
-                    parse_mail_el(fromLine, subject, content)
             except Exception as error:
                 print('Caught this error: ' + repr(error))
             os.remove(filee)

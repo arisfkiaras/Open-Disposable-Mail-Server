@@ -12,5 +12,5 @@
 #     sleep 1
 # done
 
-tail -f /var/mail/* | formail -k -X From: -X Subject: -ds sh -c 'cat > /data/emails/mail.$FILENO.mail' &
+tail -f /var/mail/* | formail -k -X X-Original-To: -X From: -X Subject: -ds sh -c 'cat > /data/emails/mail.$FILENO.mail' &
 python3 parse.py
