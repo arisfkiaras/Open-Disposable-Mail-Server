@@ -113,22 +113,29 @@ def parse_mail(filee):
     data = {}
 
     with open(filee, 'r') as openfile:
-
         to_line = openfile.readline().lower()
-        if to_line[:16] != "X-Original-To\: ":
+
+        if len(to_line) < 4:
+            to_line = openfile.readline().lower()
+
+        if to_line[:15] != "x-original-to: ":
+
+            print("to_line:" + to_line[:15])
             return
-        to_address = to_line[16:].replace('\r', '').replace('\n', '')
+        to_address = to_line[15:].replace('\r', '').replace('\n', '')
         to_address = to_address.split('@')
         if len(to_address) != 2:
+            print("to_address" + to_address)
             return
         data['to_user'] = to_address[0]
         data['to_domain'] = to_address[1]
         
         # NAME <user@domain.com>
         from_line = openfile.readline().lower()
-        if from_line[:7] != "from\: ":
+        if from_line[:6] != "from: ":
+            print("from_line" + from_line)
             return
-        data['from'] = from_line[7:].replace('\r', '').replace('\n', '')
+        data['from'] = from_line[6:].replace('\r', '').replace('\n', '')
         
         content = ""
 
@@ -150,10 +157,13 @@ def main():
         for filee in glob.glob("/data/emails/*.mail"):
             try:
                 data = parse_mail(filee)
-                insert_to_postgres(data)
+                print(data)
+                if data and data is not None:
+                    insert_to_postgres(data)
+                    os.remove(filee)
             except Exception as error:
                 print('Caught this error: ' + repr(error))
-            os.remove(filee)
+            #os.remove(filee)
 
 if __name__ == "__main__":
     # execute only if run as a script

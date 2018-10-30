@@ -38,7 +38,7 @@ class Postgres:
         cur = self.conn.cursor()
 
         cur.execute('INSERT INTO emails (from_user, from_domain, to_user, to_domain, subject, content) \
-            VALUES (%s, %s, %s, %s)', (from_user, from_domain, to_user, to_domain, subject, content))
+            VALUES (%s, %s, %s, %s, %s, %s)', (from_user, from_domain, to_user, to_domain, subject, content))
         self.conn.commit()
     
     def execute(self, command):
