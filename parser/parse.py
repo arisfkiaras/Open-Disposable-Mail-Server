@@ -140,7 +140,7 @@ def parse_mail(filee):
         content = ""
 
         subject_line = openfile.readline()
-        if subject_line[:10].lower() != "subject\: ":
+        if subject_line[:9].lower() != "subject: ":
             content = content + subject_line
             data['subject'] = ''
         else:
