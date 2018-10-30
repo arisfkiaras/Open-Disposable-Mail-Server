@@ -105,7 +105,6 @@ def insert_to_postgres(data):
         '',
         data['to_user'],
         data['to_domain'], 
-        data['to_domain'],
         data['subject'],
         data['content']
     )
