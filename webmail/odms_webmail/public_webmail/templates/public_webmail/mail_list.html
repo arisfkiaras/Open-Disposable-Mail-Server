@@ -1,11 +1,33 @@
+{% extends 'public_webmail/base.html' %}
+
+{% block content %}
+<table class="table table-hover ">
+    <thead>
+        <tr>
+            <th style="width: 30%">From:</th>
+            <th style="width: 10%">To:</th>
+            <th style="width: 30%">Subject</th>
+            <th style="width: 10%">Time</th>
+        </tr>
+    </thead>
+    <tbody>
+
+
 {% if emails %}
-    <ul>
     {% for email in emails %}
-        {% for item in email.items %}
-            <li>{{ item }}</li>
-        {% endfor %}
+    <tr onclick="window.location='/mail/{{ email.id }}'">
+        <td>{{ email.from }}</td>
+        <td>{{ email.to }}</td>
+        <td>{{ email.subject }}</td>
+        <td>{{ email.time }}</td>
+    </tr>
+
     {% endfor %}
-    </ul>
+
 {% else %}
-    <p>s.</p>
+
 {% endif %}
+
+</tbody>
+</table>
+{% endblock %}
