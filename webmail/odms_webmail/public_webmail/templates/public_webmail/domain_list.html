@@ -1,0 +1,13 @@
+{% extends 'public_webmail/base.html' %}
+
+{% block content %}
+{% if domains_list %}
+
+    {% for domain in domains_list %}
+    <button type="button" class="btn btn-light" onclick='location.href="/mails/{{ domain.hostname }}/"'>{{ domain.hostname }}</button>
+    {% endfor %}
+{% else %}
+{% endif %}
+<button type="button" class="btn btn-light" onclick='location.href="/mails"'>All Emails</button>
+{% endblock %}
+

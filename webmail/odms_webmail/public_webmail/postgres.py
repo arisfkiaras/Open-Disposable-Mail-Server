@@ -24,11 +24,18 @@ class Postgres:
 
         return cur.fetchall()
 
-    def get_emails_all(self):
+    def get_all_emails(self):
         result = self.execute("Select id, from_user, from_domain, to_user, to_domain, subject, timestamp from emails limit 1000;")
-        # print(result)
         return result
-    
+
+    def get_domain_emails(self, domain):
+        results = self.execute("Select id, from_user, from_domain, to_user, to_domain, subject, timestamp from emails where to_domain = %s limit 1000;", domain)
+        return results
+
+    def get_full_address_emails(self, domain, username):
+        results = self.execute("Select id, from_user, from_domain, to_user, to_domain, subject, timestamp from emails where to_domain = %s and to_user = %s limit 1000;", domain, username)
+        return results
+
     def get_email_content(self, id):
         if id.isdigit():
             result = self.execute("Select content from emails where id = %s", id)

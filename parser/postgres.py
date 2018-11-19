@@ -20,6 +20,7 @@ class Postgres:
     def create_table(self):
         # CREATE TABLE images (imgname text, img bytea);
         cur = self.conn.cursor()
+        # Should consider adding uuid DEFAULT uuid_generate_v4 () instead of serial key
         cur.execute("""
             CREATE TABLE emails (
                 id SERIAL PRIMARY KEY,
@@ -46,12 +47,3 @@ class Postgres:
         cur.execute(command)
         print(cur.fetchall())
         self.conn.commit()
-
-# a = Postgres()
-# a.create_table()
-# # a.execute("Select * from emails limit 1000;")
-# # a.insert_email("yolo", "s", "no suibbkect","As")
-# # #a.create_table()
-# # with open('test', 'r') as openfile:
-# #     data = openfile.read()
-# #     a.insert_email("yolo", "s", "no suibbkect", data)

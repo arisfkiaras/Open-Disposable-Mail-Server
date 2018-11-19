@@ -1,6 +1,18 @@
 {% extends 'public_webmail/base.html' %}
 
 {% block content %}
+<input class="form-control" id="email_search" type="text" placeholder="Search..">
+<script>
+    $(document).ready(function(){
+      $("#email_search").on("keyup", function() {
+        var value = $(this).val().toLowerCase();
+        $("#mail_list tr").filter(function() {
+          $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+        });
+      });
+    });
+</script>
+
 <table class="table table-hover ">
     <thead>
         <tr>
@@ -10,7 +22,7 @@
             <th style="width: 10%">Time</th>
         </tr>
     </thead>
-    <tbody>
+    <tbody id="mail_list">
 
 
 {% if emails %}
@@ -28,6 +40,6 @@
 
 {% endif %}
 
-</tbody>
+    </tbody>
 </table>
 {% endblock %}
