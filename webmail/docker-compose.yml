@@ -13,6 +13,7 @@ services:
 
   web_interface:
     image: frouk/webmail
+    command: python3 manage.py runserver 0.0.0.0:8000
     depends_on:
       - django_db
 
