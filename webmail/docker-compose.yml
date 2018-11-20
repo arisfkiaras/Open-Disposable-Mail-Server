@@ -26,9 +26,12 @@ services:
       - 8885:8000
     networks:
       - djangonet
+      - postgresnet 
+      
 volumes:
   postgres_dj_db_data:
     driver: local
 
 networks:
   djangonet:
+  postgresnet:
