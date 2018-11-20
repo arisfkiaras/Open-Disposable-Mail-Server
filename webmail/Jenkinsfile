@@ -33,7 +33,7 @@ pipeline {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'qa_server_credentials', usernameVariable: 'USERNAME', passwordVariable: 'USERPASS')]) {
                     script {
-                        sh "sshpass -p '$USERPASS' -v scp -o StrictHostKeyChecking=no docker-compose.yml $USERNAME@$qa_ip:~/webmail/docker-compose.yml"
+                        sh "sshpass -p '$USERPASS' -v scp -o StrictHostKeyChecking=no webmail/docker-compose.yml $USERNAME@$qa_ip:~/webmail/docker-compose.yml"
                     }
                 }
             }
