@@ -56,7 +56,7 @@ pipeline {
                         }
                         try {
                             sh "sshpass -p '$USERPASS' -v ssh -o StrictHostKeyChecking=no $USERNAME@$qa_ip \"cd webmail; docker-compose rm -f\""
-                            sh "sshpass -p '$USERPASS' -v ssh -o StrictHostKeyChecking=no $USERNAME@$qa_ip \"cd webmail; DJ_DB_PASSWORD=$DJ_DB_PASSWORD POSTGRES_DB_PASSWORD=$POSTGRES_DB_PASSWORD docker-compose up -d\""
+                            sh "sshpass -p '$USERPASS' -v ssh -o StrictHostKeyChecking=no $USERNAME@$qa_ip \"cd webmail; DJ_SECRET_KEY=$DJ_DB_PASSWORD DJ_DB_PASSWORD=$DJ_DB_PASSWORD POSTGRES_DB_PASSWORD=$POSTGRES_DB_PASSWORD docker-compose up -d\""
                         } catch (err) {
                             echo: 'caught error: $err'
                         }
