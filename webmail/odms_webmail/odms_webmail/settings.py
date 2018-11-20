@@ -20,12 +20,12 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'default_secret_do_not_deploy_with_this_one'
+SECRET_KEY = os.environ.get('DJ_SECRET_KEY', 'default_secret_do_not_deploy_with_this_one')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['cheapdomain.fun', 'localhost', '127.0.0.1', '[::1]']
 
 
 # Application definition
@@ -76,8 +76,12 @@ WSGI_APPLICATION = 'odms_webmail.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'postgres',
+        'USER': os.environ.get('DJ_DB_USERNAME', 'postgres'),
+        'PASSWORD' : os.environ.get('DJ_DB_PASSWORD', 'postgres'),
+        'HOST': os.environ.get('DJ_DB_HOST', 'django_db'),
+        'PORT': 5432,
     }
 }
 
