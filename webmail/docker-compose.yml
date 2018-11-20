@@ -10,13 +10,19 @@ services:
       - postgres_dj_db_data:/var/lib/postgresql/data
     ports:
       - 8884:5432
+    networks:
+      - djangonet
 
   web_interface:
     image: frouk/webmail
     command: python3 manage.py runserver 0.0.0.0:8000
     depends_on:
       - django_db
-
+    networks:
+      - djangonet
 volumes:
   postgres_dj_db_data:
     driver: local
+
+networks:
+  djangonet:
