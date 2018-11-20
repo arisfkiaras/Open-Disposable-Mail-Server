@@ -18,6 +18,8 @@ services:
     command: python3 odms_webmail/manage.py runserver 0.0.0.0:8000
     depends_on:
       - django_db
+    ports:
+      - 8885:8000
     networks:
       - djangonet
 volumes:
