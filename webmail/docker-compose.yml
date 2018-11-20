@@ -15,3 +15,7 @@ services:
     image: frouk/webmail
     depends_on:
       - django_db
+
+volumes:
+  postgres_dj_db_data:
+    driver: local
