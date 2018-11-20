@@ -1,0 +1,17 @@
+version: '2.2'
+
+services:
+  django_db:
+    image: postgres
+    container_name: postgres_dj_container
+    environment:
+      - POSTGRES_PASSWORD=${DJ_DB_PASSWORD}
+    volumes:
+      - postgres_dj_db_data:/var/lib/postgresql/data
+    ports:
+      - 8884:5432
+
+  web_interface:
+    image: frouk/webmail
+    depends_on:
+      - django_db

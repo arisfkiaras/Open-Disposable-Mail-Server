@@ -1,0 +1,66 @@
+pipeline {
+    agent any
+    stages {
+        stage('Build Docker Image') {
+            when {
+                branch 'master'
+            }
+            steps {
+                script {
+                    app = docker.build("frouk/webmail")
+                }
+            }
+        }
+        stage('Push Docker Image') {
+            when {
+                branch 'master'
+            }
+            steps {
+                script {
+                    docker.withRegistry('https://registry.hub.docker.com', 'docker_hub_login') {
+                        app.push("${env.BUILD_NUMBER}")
+                        app.push("latest")
+                    }
+                }
+            }
+        }
+        stage('Push compose file to server') {
+            when {
+                branch 'master'
+            }
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'qa_server_credentials', usernameVariable: 'USERNAME', passwordVariable: 'USERPASS')]) {
+                    script {
+                        sh "sshpass -p '$USERPASS' -v scp -o StrictHostKeyChecking=no docker-compose.yml $USERNAME@$qa_ip:~/webmail/docker-compose.yml"
+                    }
+                }
+            }
+        }
+        stage('DeployToQA') {
+            when {
+                branch 'master'
+            }
+            steps {
+                withCredentials([
+                    usernamePassword(credentialsId: 'postgres_db_credentials', usernameVariable: 'POSTGRES_DB_USERNAME', passwordVariable: 'POSTGRES_DB_PASSWORD'),
+                    usernamePassword(credentialsId: 'dj_db_credentials', usernameVariable: 'DJ_DB_USERNAME', passwordVariable: 'DJ_DB_PASSWORD'),
+                    usernamePassword(credentialsId: 'qa_server_credentials', usernameVariable: 'USERNAME', passwordVariable: 'USERPASS')
+                ]){
+                    script {
+                        try {
+                            sh "sshpass -p '$USERPASS' -v ssh -o StrictHostKeyChecking=no $USERNAME@$qa_ip \"cd webmail; docker-compose down\""                        
+                        } catch (err) {
+                            echo: 'Guess, network is in use: $err'
+                        }
+                        try {
+                            sh "sshpass -p '$USERPASS' -v ssh -o StrictHostKeyChecking=no $USERNAME@$qa_ip \"cd webmail; docker-compose rm -f\""
+                            sh "sshpass -p '$USERPASS' -v ssh -o StrictHostKeyChecking=no $USERNAME@$qa_ip \"cd webmail; DJ_DB_PASSWORD=$DJ_DB_PASSWORD docker-compose up -d\""
+                        } catch (err) {
+                            echo: 'caught error: $err'
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
